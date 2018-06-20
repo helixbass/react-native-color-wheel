@@ -25,6 +25,7 @@ export class ColorWheel extends Component {
       offset: { x: 0, y: 0 },
       currentColor: props.initialColor,
       pan: new Animated.ValueXY(),
+      x: props.x,
     }
   }
 
@@ -75,7 +76,7 @@ export class ColorWheel extends Component {
   }
 
   onLayout() {
-    setTimeout(() => this.measureOffset(), 100)
+    this.measureOffset()
   }
 
   measureOffset() {
@@ -85,7 +86,8 @@ export class ColorWheel extends Component {
     * x and y are the distances to its previous element
     * but in measureInWindow they are relative to the window
     */
-    this.self.measureInWindow((x, y, width, height) => {
+    this.self.measureInWindow((measuredX, y, width, height) => {
+      const x = this.props.x != null ? this.props.x : measuredX
       const window = Dimensions.get('window')
       const absX = x % width
       const radius = Math.min(width, height) / 2
@@ -215,6 +217,8 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    paddingVertical: 25,
+    paddingHorizontal: 25,
   },
   img: {
     alignSelf: 'center',

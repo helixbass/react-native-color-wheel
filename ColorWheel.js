@@ -75,7 +75,7 @@ export class ColorWheel extends Component {
   }
 
   onLayout() {
-    this.measureOffset()
+    setTimeout(() => this.measureOffset(), 100)
   }
 
   measureOffset() {

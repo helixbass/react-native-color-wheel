@@ -33,7 +33,7 @@ export class ColorWheel extends Component {
       nextProps.updatedColor &&
       nextProps.updatedColor === nextProps.initialColor
     ) {
-      this.forceUpdate(nextProps.updatedColor)
+      this.forceUpdate(nextProps.updatedColor, { dontFireChange: true })
     }
   }
 
@@ -102,7 +102,7 @@ export class ColorWheel extends Component {
         top: y % window.height,
         left: absX,
       })
-      this.forceUpdate(this.state.currentColor)
+      this.forceUpdate(this.state.currentColor, { dontFireChange: true })
     })
   }
 
@@ -148,11 +148,13 @@ export class ColorWheel extends Component {
     })
   }
 
-  forceUpdate = color => {
+  forceUpdate = (color, { dontFireChange } = {}) => {
     const { h, s, v } = colorsys.hex2Hsv(color)
     const { left, top } = this.calcCartesian(h, s / 100)
     this.setState({ currentColor: color })
-    this.props.onColorChange({ h, s, v })
+    if (!dontFireChange) {
+      this.props.onColorChange({ h, s, v })
+    }
     this.state.pan.setValue({
       x: left - this.props.thumbSize / 2,
       y: top - this.props.thumbSize / 2,

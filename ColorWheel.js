@@ -50,7 +50,8 @@ export class ColorWheel extends Component {
             this.props.thumbSize / 2 +
             25,
           y:
-            -this.state.top + nativeEvent.pageY - this.props.thumbSize / 2 + 25,
+            // -this.state.top + nativeEvent.pageY - this.props.thumbSize / 2 + 25,
+            -this.state.top + nativeEvent.pageY - this.props.thumbSize / 2,
         })
         return true
       },
@@ -118,7 +119,7 @@ export class ColorWheel extends Component {
     const { pageX, pageY, moveX, moveY } = gestureState
     let [x, y] = [pageX || moveX, pageY || moveY]
     // x -= 25
-    // y -= 25
+    y -= 25
     const [dx, dy] = [x - this.state.offset.x, y - this.state.offset.y]
     return {
       deg: Math.atan2(dy, dx) * (-180 / Math.PI),

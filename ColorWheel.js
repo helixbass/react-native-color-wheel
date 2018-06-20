@@ -44,8 +44,13 @@ export class ColorWheel extends Component {
         this.updateColor({ nativeEvent })
 
         this.state.pan.setValue({
-          x: -this.state.left + nativeEvent.pageX - this.props.thumbSize / 2,
-          y: -this.state.top + nativeEvent.pageY - this.props.thumbSize / 2,
+          x:
+            -this.state.left +
+            nativeEvent.pageX -
+            this.props.thumbSize / 2 +
+            25,
+          y:
+            -this.state.top + nativeEvent.pageY - this.props.thumbSize / 2 + 25,
         })
         return true
       },
@@ -87,6 +92,8 @@ export class ColorWheel extends Component {
     */
     this.self.measureInWindow((measuredX, y, width, height) => {
       const window = Dimensions.get('window')
+      width -= 50
+      height -= 50
       const x = this.props.centered ? (window.width - width) / 2 : measuredX
       const absX = x % width
       const radius = Math.min(width, height) / 2
@@ -109,7 +116,9 @@ export class ColorWheel extends Component {
 
   calcPolar(gestureState) {
     const { pageX, pageY, moveX, moveY } = gestureState
-    const [x, y] = [pageX || moveX, pageY || moveY]
+    let [x, y] = [pageX || moveX, pageY || moveY]
+    // x -= 25
+    // y -= 25
     const [dx, dy] = [x - this.state.offset.x, y - this.state.offset.y]
     return {
       deg: Math.atan2(dy, dx) * (-180 / Math.PI),
@@ -129,8 +138,8 @@ export class ColorWheel extends Component {
     const x = r * Math.cos(rad)
     const y = r * Math.sin(rad)
     return {
-      left: this.state.width / 2 + x,
-      top: this.state.height / 2 - y,
+      left: this.state.width / 2 + x + 25,
+      top: this.state.height / 2 - y + 25,
     }
   }
 
@@ -217,11 +226,13 @@ const styles = StyleSheet.create({
   container: {
     paddingVertical: 25,
     paddingHorizontal: 25,
-    maxWidth: Dimensions.get('window').width,
-    maxHeight: Dimensions.get('window').width,
+    // maxWidth: Dimensions.get('window').width,
+    // maxHeight: Dimensions.get('window').width,
     flexGrow: 1,
   },
   coverResponder: {
+    paddingVertical: 25,
+    paddingHorizontal: 25,
     alignItems: 'center',
     justifyContent: 'center',
     flexGrow: 1,

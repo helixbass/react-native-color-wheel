@@ -25,7 +25,6 @@ export class ColorWheel extends Component {
       offset: { x: 0, y: 0 },
       currentColor: props.initialColor,
       pan: new Animated.ValueXY(),
-      x: props.x,
     }
   }
 
@@ -87,8 +86,8 @@ export class ColorWheel extends Component {
     * but in measureInWindow they are relative to the window
     */
     this.self.measureInWindow((measuredX, y, width, height) => {
-      const x = this.props.x != null ? this.props.x : measuredX
       const window = Dimensions.get('window')
+      const x = this.props.centered ? (window.width - width) / 2 : measuredX
       const absX = x % width
       const radius = Math.min(width, height) / 2
       const offset = {
@@ -194,31 +193,38 @@ export class ColorWheel extends Component {
       (this._panResponder && this._panResponder.panHandlers) || {}
 
     return (
-      <View
-        ref={node => {
-          this.self = node
-        }}
-        {...panHandlers}
-        onLayout={nativeEvent => this.onLayout(nativeEvent)}
-        style={[styles.coverResponder, this.props.style]}
-      >
-        <Image
-          style={[styles.img, { height: radius * 2, width: radius * 2 }]}
-          source={require('./color-wheel.png')}
-        />
-        <Animated.View style={[this.state.pan.getLayout(), thumbStyle]} />
+      <View style={styles.container}>
+        <View
+          ref={node => {
+            this.self = node
+          }}
+          {...panHandlers}
+          onLayout={nativeEvent => this.onLayout(nativeEvent)}
+          style={[styles.coverResponder, this.props.style]}
+        >
+          <Image
+            style={[styles.img, { height: radius * 2, width: radius * 2 }]}
+            source={require('./color-wheel.png')}
+          />
+          <Animated.View style={[this.state.pan.getLayout(), thumbStyle]} />
+        </View>
       </View>
     )
   }
 }
 
 const styles = StyleSheet.create({
-  coverResponder: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+  container: {
     paddingVertical: 25,
     paddingHorizontal: 25,
+    maxWidth: Dimensions.get('window').width,
+    maxHeight: Dimensions.get('window').width,
+    flexGrow: 1,
+  },
+  coverResponder: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexGrow: 1,
   },
   img: {
     alignSelf: 'center',
